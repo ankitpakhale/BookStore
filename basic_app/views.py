@@ -143,10 +143,9 @@ def otpCheck(request):
                 # del request.session['otp']
                 print("You Are Ready to Create New Password...")
 
-                # user = Person.objects.get(email = otp1)
-                # request.session['email'] = user.email
+                user = Person.objects.get(email = otp1)
+                request.session['email'] = user.email
                 
-
                 return redirect('basic_app:NEWPASS')
             else:
                 del request.session['otp']
@@ -158,7 +157,7 @@ def otpCheck(request):
 def newPassword(request):
     print("Inside New Pass FUNCTION")
     # if 'otp' in request.session.keys():
-    if 'otp' in request.session:
+    if 'email' in request.session:
         print("Inside New Pass if CONDITION")
         if request.POST:
             pass1 = request.POST['pass1']
