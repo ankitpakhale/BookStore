@@ -89,7 +89,7 @@ def forgot(request):
         
 
         request.session['otp'] = otp
-        return redirect('OTPCHECK')
+        return redirect('basic_app:OTPCHECK')
         # try:
         #     valid = Person.objects.get(email=data)
         #     print(valid)
@@ -143,21 +143,22 @@ def otpCheck(request):
                 # del request.session['otp']
                 print("You Are Ready to Create New Password...")
 
-                # user = signUp.objects.get(email = otp1)
+                # user = Person.objects.get(email = otp1)
                 # request.session['email'] = user.email
-    
-                return redirect('NEWPASS')
+                
+
+                return redirect('basic_app:NEWPASS')
             else:
                 del request.session['otp']
-                return redirect('FORGOT')
+                return redirect('basic_app:FORGOT')
         return render(request,'basic_app/otpCheck.html')
     else:
-        return redirect('LOGIN')
+        return redirect('basic_app:login')
 
 def newPassword(request):
     print("Inside New Pass FUNCTION")
     # if 'otp' in request.session.keys():
-    if 'email' in request.session:
+    if 'otp' in request.session:
         print("Inside New Pass if CONDITION")
         if request.POST:
             pass1 = request.POST['pass1']
@@ -176,11 +177,11 @@ def newPassword(request):
                 obj.save()
                 del request.session['otp']
                 # return redirect('HOME')
-                return redirect('LOGIN')
+                return redirect('basic_app:login')
             else:
                 return HttpResponse("<h1>Password must be same</h1>")
         return render(request,'basic_app/newPass.html')
-    return redirect('LOGIN')
+    return redirect('basic_app:login')
 
 def authorwise(request,name):
     if request.session.has_key('email'):
