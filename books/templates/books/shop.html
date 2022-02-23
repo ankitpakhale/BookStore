@@ -491,7 +491,6 @@
 				
 			</div>
 		</div>
-
 		<div class="col-xl-9 col-lg-8 col-md-7">
 			<!-- Start Filter Bar -->
 			<!-- End Filter Bar -->
@@ -512,26 +511,17 @@
 								</div><br>
 								<div class="prd-bottom">
 
-									<!-- <form method="POST">
-										{% csrf_token %}
-										<span style="color: #000; font-weight: 600; font-size: 16px;">
-											Quantity
-										</span>
-										<input type="submit" value="-" name='psub' style="margin-left: 5px;margin-bottom: 15px;">
-										<input value={{qty}} min="1" name="qty" readonly>
-										<input type="submit" value="+" name='psub'>
-									</form> -->
-									
 									<form action="{% url 'books:cart' %}" method="POST">
 										{% csrf_token %}
 										<input type="hidden" value="{{ cat.id }}" name='bid'>
 										<button type="submit" class="btn btn-success btn-block">
 											<i class="fa fa shopping-cart"></i>
-											Add To Cart
+											View
 										</button>
 										<a href="#" data-toggle="modal" data-target="#myModal1"></a>
 									</form>
-									
+									<a href="{% url 'books:cart' cat.id %}">VIEW</a>
+
 								</div>
 								<br>
 							</div>
