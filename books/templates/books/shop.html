@@ -1,0 +1,540 @@
+{%extends 'basic_app/base.html' %}
+{% block content %}
+<div class="banner-bg-inner">
+	<!-- banner-text -->
+	<div class="banner-text-inner">
+		<div class="container">
+			<h2 class="title-inner">
+				world of reading
+			</h2>
+
+		</div>
+	</div>
+	<!-- //banner-text -->
+</div>
+<!-- //banner -->
+<!-- breadcrumbs -->
+<div class="crumbs text-center">
+	<div class="container">
+		<div class="row">
+			<ul class="btn-group btn-breadcrumb bc-list">
+				<li class="btn btn1">
+					<a href="index.html">
+						<i class="glyphicon glyphicon-home"></i>
+					</a>
+				</li>
+				<li class="btn btn2">
+					<a href="shop.html">product catalogue</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+</div>
+<!--//breadcrumbs ends here-->
+<!-- Shop -->
+<!-- <div class="innerf-pages section">
+	
+	<div class="container-cart">
+		<div class="side-bar col-md-3">
+
+			<div class="left-side">
+				<h3 class="shopf-sear-headits-sear-head">
+					Categories</h3>
+				<ul>
+					<form action="{%url 'books:my_filter' %}" method="GET">
+						<li>
+
+							<button type="submit" name="query" value="biography"
+								class="btn btn-outline-dark">Biography</button>
+
+						</li>
+						<li>
+
+							<button type="submit" name="query" value="mistry"
+								class="btn btn-outline-dark">Mystry</button>
+
+						</li>
+						<li>
+
+							<button type="submit" name="query" value="fantacy"
+								class="btn btn-outline-dark">Fantacy</button>
+
+						</li>
+						<li>
+							<button type="submit" name="query" value="finance"
+								class="btn btn-outline-dark">Finance</button>
+						</li>
+						<li>
+							<button type="submit" name="query" value="war" class="btn btn-outline-dark">War</button>
+						</li>
+						<li>
+							<button type="submit" name="query" value="drama" class="btn btn-outline-dark">Drama</button>
+						</li>
+						<li>
+							<button type="submit" name="query" value="history"
+								class="btn btn-outline-dark">History</button>
+						</li>
+						<li>
+							<button type="submit" name="query" value="science-friction"
+								class="btn btn-outline-dark">Sci-Fi</button>
+						</li>
+						<li>
+
+							<button type="submit" name="query" value="management"
+								class="btn btn-outline-dark">Managemnet</button>
+
+						</li>
+						<li>
+
+							<button type="submit" name="query" value="business"
+								class="btn btn-outline-dark">Business</button>
+
+						</li>
+
+
+					</form>
+				</ul>
+
+			</div>
+
+			<div class="search-hotel">
+				<h3 class="shopf-sear-headits-sear-head">
+					<span>author</span> in focus
+				</h3>
+				<form action="{% url 'books:search' %}" method="GET">
+					<input type="search" placeholder="search here" name="search" required="">
+					<input type="submit">
+				</form>
+			</div>
+
+			<div class="range">
+				<h3 class="shopf-sear-headits-sear-head">
+					<span>Price</span> range
+				</h3>
+				<ul class="dropdown-menu6">
+					<li>
+
+						<div id="slider-range"></div>
+						<input type="text" id="amount" style="border: 0; color: #ffffff; font-weight: normal;" />
+					</li>
+
+				</ul>
+				<form action="{%url 'books:my_filter' %}" method="GET">
+					<ul>
+						<li>
+							<button type="submit" name="bprice" value="LTH" class="btn btn-outline-dark">Low to
+								high</button>
+						</li>
+						<li>
+							<button type="submit" name="bprice" value="HTL" class="btn btn-outline-dark">High to
+								low</button>
+						</li>
+						<li>
+							<button type="submit" name="bprice" value="00-500"
+								class="btn btn-outline-dark">Rs.00-Rs.500</button>
+						</li>
+						<li>
+							<button type="submit" name="bprice" value="500-1000"
+								class="btn btn-outline-dark">Rs.500-Rs.1000</button>
+						</li>
+
+					</ul>
+				</form>
+			</div>
+			<div class="left-side">
+				<form action="{%url 'books:my_filter' %}" method="GET">
+					<h3 class="shopf-sear-headits-sear-head">
+						<span>latest</span> arrivals
+					</h3>
+					<ul>
+						<li>
+							<button type="submit" name="arrival" value="newest"
+								class="btn btn-outline-dark">Newest</button>
+						</li>
+						<li>
+							<button type="submit" name="arrival" value="oldest"
+								class="btn btn-outline-dark">Oldest</button>
+						</li>
+
+					</ul>
+				</form>
+			</div>
+		</div>
+		{% for i in b %}
+
+				<div class="product-sec1">
+				
+					<div class="col-md-3 product-men">
+						<div class="product-chr-info chr">
+							<div>
+								<a href="{% url 'books:book_view' i.id %}">
+									<img src="{{ i.cover.url }}" height="300px" width="200px" alt="">
+								</a>
+							</div>
+							<div class="caption">
+								<h4>{{ i.title }}({{i.printed_year}})</h4>
+								{% for w in i.authors.all %}
+								<p>{{ w.name }}</p>
+								{% endfor %}
+								<div class="matrlf-mid">
+									<ul class="rating">
+										<li>
+											<a href="#">
+												<span class="fa fa-star yellow-star" aria-hidden="true"></span>
+											</a>
+										</li>
+										<li>
+											<a href="#">
+												<span class="fa fa-star yellow-star" aria-hidden="true"></span>
+											</a>
+										</li>
+										<li>
+											<a href="#">
+												<span class="fa fa-star yellow-star" aria-hidden="true"></span>
+											</a>
+										</li>
+										<li>
+											<a href="#">
+												<span class="fa fa-star gray-star" aria-hidden="true"></span>
+											</a>
+										</li>
+										<li>
+											<a href="#">
+												<span class="fa fa-star gray-star" aria-hidden="true"></span>
+											</a>
+										</li>
+									</ul>
+									<ul class="price-list">
+										<li>Rs.{{i.price}}</li>
+										<li>
+										
+										</li>
+									</ul>
+
+									<div class="clearfix"> </div>
+								</div>
+								<form action="{% url 'books:cart' %}" method="POST">
+									{% csrf_token %}
+									<input type="hidden" value="{{i.id}}" name='bid'>
+									<button type="submit" class="btn btn-success btn-block">
+										<i class="fa fa shopping-cart"></i>
+										Add To Cart
+
+									</button>
+									<a href="#" data-toggle="modal" data-target="#myModal1"></a>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+		{% endfor %}
+	</div>
+</div> -->
+<!-- 
+<div class="innerf-pages section">
+	<form action="">
+		{% for i in form%}
+		{{i}}
+		{% endfor %}
+	</form>
+	<div class="container-cart">
+		<div class="side-bar col-md-3">
+			<div class="left-side">
+				<h3 class="shopf-sear-headits-sear-head">Categories</h3>
+				<ul>
+					<form action="{%url 'books:my_filter' %}" method="GET">
+						<li>
+							<button type="submit" name="query" value="biography"
+								class="btn btn-outline-dark">Biography</button>
+						</li>
+						<li>
+							<button type="submit" name="query" value="mistry"
+								class="btn btn-outline-dark">Mystry</button>
+						</li>
+						<li>
+							<button type="submit" name="query" value="fantacy"
+								class="btn btn-outline-dark">Fantacy</button>
+						</li>
+						<li>
+							<button type="submit" name="query" value="finance"
+								class="btn btn-outline-dark">Finance</button>
+						</li>
+						<li>
+							<button type="submit" name="query" value="war" class="btn btn-outline-dark">War</button>
+						</li>
+						<li>
+							<button type="submit" name="query" value="drama" class="btn btn-outline-dark">Drama</button>
+						</li>
+						<li>
+							<button type="submit" name="query" value="history"
+								class="btn btn-outline-dark">History</button>
+						</li>
+						<li>
+							<button type="submit" name="query" value="science-friction"
+								class="btn btn-outline-dark">Sci-Fi</button>
+						</li>
+						<li>
+							<button type="submit" name="query" value="management"
+								class="btn btn-outline-dark">Managemnet</button>
+						</li>
+						<li>
+							<button type="submit" name="query" value="business"
+								class="btn btn-outline-dark">Business</button>
+						</li>
+					</form>
+				</ul>
+			<div class="search-hotel">
+				<h3 class="shopf-sear-headits-sear-head">
+					<span>author</span> in focus
+				</h3>
+				<form action="{% url 'books:search' %}" method="GET">
+					<input type="search" placeholder="search here" name="search" required="">
+					<input type="submit">
+				</form>
+			</div>
+
+			<div class="range">
+				<h3 class="shopf-sear-headits-sear-head">
+					<span>Price</span> range
+				</h3>
+				<ul class="dropdown-menu6">
+					<li>
+
+						<div id="slider-range"></div>
+						<input type="text" id="amount" style="border: 0; color: #ffffff; font-weight: normal;" />
+					</li>
+
+				</ul>
+				<form action="{%url 'books:my_filter' %}" method="GET">
+					<ul>
+						<li>
+							<button type="submit" name="bprice" value="LTH" class="btn btn-outline-dark">Low to
+								high</button>
+						</li>
+						<li>
+							<button type="submit" name="bprice" value="HTL" class="btn btn-outline-dark">High to
+								low</button>
+						</li>
+						<li>
+							<button type="submit" name="bprice" value="00-500"
+								class="btn btn-outline-dark">Rs.00-Rs.500</button>
+						</li>
+						<li>
+							<button type="submit" name="bprice" value="500-1000"
+								class="btn btn-outline-dark">Rs.500-Rs.1000</button>
+						</li>
+
+					</ul>
+				</form>
+			</div>
+			<div class="left-side">
+				<form action="{%url 'books:my_filter' %}" method="GET">
+					<h3 class="shopf-sear-headits-sear-head">
+						<span>latest</span> arrivals
+					</h3>
+					<ul>
+						<li>
+							<button type="submit" name="arrival" value="newest"
+								class="btn btn-outline-dark">Newest</button>
+						</li>
+						<li>
+							<button type="submit" name="arrival" value="oldest"
+								class="btn btn-outline-dark">Oldest</button>
+						</li>
+
+					</ul>
+				</form>
+			</div>
+		</div>
+	</div>
+</div> -->
+<br>
+<div class="container">
+	<div class="row">
+</div>
+</div>
+</div>
+<br>
+<div class="container">
+	<div class="row">
+		<div class="wrap">
+			<div class="search">
+				<form method="GET" action="{% url 'books:search' %}">
+			   <input type="search" class="searchTerm" placeholder="Search Here" name="search" required="">
+			   <button type="submit" class="searchButton">
+				 <i class="fa fa-search"></i>
+			  </button>
+			</form>
+			</div>
+		 </div><hr>
+		
+		<div class="col-xl-3 col-lg-4 col-md-5">
+			<div class="sidebar-categories">
+				<div class="head">Browse Categories</div><br>
+				{% for c in c %}
+				
+				<ul class="main-categories">
+					<li class="main-nav-list"><a data-toggle="collapse" href="#" aria-expanded="false"><span
+							 class="lnr lnr-arrow-right"></span><a href="/catwise/{{ c.cat_name }}/">{{ c }}</a><span class="number"></span></a>
+					</li>
+				</ul>
+				{% endfor %}
+			</div>
+			<hr>
+			<div class="sidebar-categories">
+				<div class="head">Author Categories</div><br>
+				{% for c in a %}
+				
+				<ul class="main-categories">
+					<li class="main-nav-list"><a data-toggle="collapse" href="#" aria-expanded="false"><span
+							 class="lnr lnr-arrow-right"></span><a href="/authwise/{{ c.name }}/">{{ c }}</a><span class="number"></span></a>
+					</li>
+				</ul>
+				{% endfor %}
+			</div><hr>
+			<div class="sidebar-categories">
+				<div class="head">Book Categories</div><br>
+				<form action="{%url 'books:my_filter' %}" method="GET">
+					<li>
+
+						<button type="submit" name="query" value="biography"
+							class="btn btn-outline-dark">Biography</button>
+
+					</li>
+					<li>
+
+						<button type="submit" name="query" value="mistry"
+							class="btn btn-outline-dark">Mystry</button>
+
+					</li>
+					<li>
+
+						<button type="submit" name="query" value="fantacy"
+							class="btn btn-outline-dark">Fantacy</button>
+
+					</li>
+					<li>
+						<button type="submit" name="query" value="finance"
+							class="btn btn-outline-dark">Finance</button>
+					</li>
+					<li>
+						<button type="submit" name="query" value="war" class="btn btn-outline-dark">War</button>
+					</li>
+					<li>
+						<button type="submit" name="query" value="drama" class="btn btn-outline-dark">Drama</button>
+					</li>
+					<li>
+						<button type="submit" name="query" value="history"
+							class="btn btn-outline-dark">History</button>
+					</li>
+					<li>
+						<button type="submit" name="query" value="science-friction"
+							class="btn btn-outline-dark">Sci-Fi</button>
+					</li>
+					<li>
+
+						<button type="submit" name="query" value="management"
+							class="btn btn-outline-dark">Managemnet</button>
+
+					</li>
+					<li>
+
+						<button type="submit" name="query" value="business"
+							class="btn btn-outline-dark">Business</button>
+
+					</li>
+
+
+				</form>
+			</div><hr>
+			<div class="sidebar-categories">
+				<div class="head">Price Range</div><br>
+				<form action="{%url 'books:my_filter' %}" method="GET">
+					<ul>
+						<li>
+							<button type="submit" name="bprice" value="LTH" class="btn btn-outline-dark">Low to
+								high</button>
+						</li>
+						<li>
+							<button type="submit" name="bprice" value="HTL" class="btn btn-outline-dark">High to
+								low</button>
+						</li>
+						<li>
+							<button type="submit" name="bprice" value="00-500"
+								class="btn btn-outline-dark">Rs.00-Rs.500</button>
+						</li>
+						<li>
+							<button type="submit" name="bprice" value="500-1000"
+								class="btn btn-outline-dark">Rs.500-Rs.1000</button>
+						</li>
+			
+					</ul>
+				</form>
+			</div><hr>
+			<div class="sidebar-categories">
+				<form action="{%url 'books:my_filter' %}" method="GET">
+					<h3 class="shopf-sear-headits-sear-head">
+						<span>latest</span> arrivals
+					</h3>
+					<ul>
+						<li>
+							<button type="submit" name="arrival" value="newest"
+								class="btn btn-outline-dark">Newest</button>
+						</li>
+						<li>
+							<button type="submit" name="arrival" value="oldest"
+								class="btn btn-outline-dark">Oldest</button>
+						</li>
+			
+					</ul>
+				</form>
+				
+			</div>
+		</div>
+		<div class="col-xl-9 col-lg-8 col-md-7">
+			<!-- Start Filter Bar -->
+			<!-- End Filter Bar -->
+			<!-- Start Best Seller -->
+			<section class="lattest-product-area pb-40 category-list">
+				<div class="row">
+						{% for cat in b %}
+					<div class="col-lg-4 col-md-6">
+						<div class="single-product">
+							<img style="height: 250px; width: 200px;" class="img-fluid" src="{{ cat.cover.url }}" alt="">
+							<br>
+							<div class="product-details">
+								<h3><a href="{% url 'books:book_view' cat.id %}">{{ cat.title }} ({{ cat.printed_year}})</a> </h3><br>
+								
+								<h6 style="text-align: justify;" >{{ cat.description }} </h6><br>
+								<div class="price">
+									<h4>Price: {{ cat.price }}<i class="fa fa-rupee"></i></h4>
+								</div><br>
+								<div class="prd-bottom">
+									<form action="{% url 'books:cart' %}" method="POST">
+										{% csrf_token %}
+										<input type="hidden" value="{{ cat.id }}" name='bid'>
+										<button type="submit" class="btn btn-success btn-block">
+											<i class="fa fa shopping-cart"></i>
+											Add To Cart
+	
+										</button>
+										<a href="#" data-toggle="modal" data-target="#myModal1"></a>
+									</form>
+								</div>
+								<br>
+							</div>
+						</div>
+					</div>
+					{% endfor%}
+
+					<!-- single product -->
+				</div>
+			</section>
+			<!-- End Best Seller -->
+			<!-- Start Filter Bar -->
+			<!-- End Filter Bar -->
+		</div>
+	</div>
+</div>
+
+{% endblock %}

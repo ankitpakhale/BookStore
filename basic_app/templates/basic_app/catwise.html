@@ -1,0 +1,96 @@
+{% extends 'basic_app/base.html' %}
+{% load static %}
+{% block content %}
+
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+
+<!-- banner -->
+<div class="banner-bg-agileits">
+    <!-- banner-text -->
+    <div class="banner-text">
+        <div class="container">
+            <p class="b-txt">the</p>
+            <h2 class="title">
+                Library
+            </h2>
+            <ul class="banner-txt">
+                <li>share.</li>
+                <li> explore. </li>
+                <li>amplify.</li>
+            </ul>
+        </div>
+    </div>
+    <!-- //banner-text -->
+</div>
+<!-- //banner -->
+<!-- about -->
+<br>
+<center>
+<h2>Books of Category :<b> {{ cat }}</b></h2>
+</center>
+<br>
+<div class="container">
+    <div class="row">
+        {% for i in book %}
+				<!-- product-sec1 -->
+				<div class="product-sec1">
+					<!-- row1-->
+					<div class="col-md-3 product-men">
+						<div class="product-chr-info chr">
+							<div>
+								<a href="{% url 'books:book_view' i.id %}">
+									<img src="{{ i.cover.url }}" height="300px" width="200px" alt="">
+								</a>
+							</div>
+							<div class="caption">
+								<h4>{{ i.title }}({{i.printed_year}})</h4>
+								{% for w in i.authors.all %}
+								<p>{{ w.name }}</p>
+								{% endfor %}
+								<div class="matrlf-mid">
+									
+									<ul class="price-list">
+										<li>Rs.{{i.price}}</li>
+										<li>
+											<!-- Rs.400.00 -->
+										</li>
+									</ul>
+
+									<div class="clearfix"> </div>
+								</div>
+								<form action="{% url 'books:cart' %}" method="POST">
+									{% csrf_token %}
+									<input type="hidden" value="{{i.id}}" name='bid'>
+									<button type="submit" class="btn btn-success btn-block">
+										<i class="fa fa shopping-cart"></i>
+										Add To Cart
+
+									</button>
+									<a href="#" data-toggle="modal" data-target="#myModal1"></a>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+		{% endfor %}
+    </div>
+</div>
+
+
+
+
+<!--//about bottom ends here-->
+<!-- team -->
+
+<!-- //team -->
+<!--testimonials -->
+
+<!-- //testimonials-->
+{% endblock %}
