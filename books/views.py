@@ -77,8 +77,9 @@ def shoplist(request):
 
     return render(request, 'books/shop.html', {'b': b,'c':c,'a':a})
 
+
 def book_view(request, pk):
-    
+
     p = get_object_or_404(Book, pk=pk)
     if request.session.has_key('email'):
         p = get_object_or_404(Book, pk=pk)
