@@ -45,7 +45,6 @@ label {
 
 ul {
     list-style-type: none;
-    margin: 30px 1px 0px 2px;
 }
 
 body a:hover {
@@ -3353,11 +3352,3 @@ button#btn-signup {
 }
 
 /* -- //Responsive code -- */
-
-
-/* auth code */
-
-/* .forgetContainer{
-    top: 50;
-    width: 1170px;
-  } */

@@ -510,19 +510,9 @@
 									<h4>Price: {{ cat.price }}<i class="fa fa-rupee"></i></h4>
 								</div><br>
 								<div class="prd-bottom">
-								
-									<!-- Add to cart -->
-									<!-- <form action="{% url 'books:cart' %}" method="POST">
-										{% csrf_token %}
-										<input type="hidden" value="{{ cat.id }}" name='bid'>
-										<button type="submit" class="btn btn-success btn-block">
-											<i class="fa fa shopping-cart"></i>
-											Add To Cart
-										</button>
-										<a href="#" data-toggle="modal" data-target="#myModal1"></a>
-									</form> -->
-								
-									<a href="{% url 'books:book_view' cat.id %}" class="btn btn-success btn-block" style="padding: 4px; margin: 8px;" >VIEW</a>
+									
+									<a href="{% url 'books:book_view' cat.id %}" class="btn btn-success btn-block" style="padding: 4px; margin: 8px;">View</a>
+									
 								</div>
 								<br>
 							</div>

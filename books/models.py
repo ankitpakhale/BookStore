@@ -42,8 +42,8 @@ class Book(models.Model):
 class MyCart(models.Model):
     person = models.ForeignKey(Person,on_delete=models.CASCADE)
     book = models.ForeignKey(Book,on_delete=models.CASCADE)
-    quantity=models.PositiveIntegerField(default=1)
     status = models.BooleanField(default=False)
+    quantity=models.PositiveIntegerField(default=1)
     added_on = models.DateTimeField(auto_now_add=True,null=True)
     update_on= models.DateTimeField(auto_now_add=True,null=True)
 

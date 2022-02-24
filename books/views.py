@@ -104,36 +104,51 @@ def book_preview(request, pk):
 #     return response
 
 def add_to_cart(request):
+    print("inside add_to_cart")
     if request.session.has_key('email'):
+        print("Inside first if")
         per = Person.objects.get(email=request.session['email'])
         item = MyCart.objects.filter(person__id=per.id, status=False)
         num = MyCart.objects.filter(person__id=per.id, status=False).count()
+        
         total = 0
         for q in item:
-            total += q.book.price
+            total += q.book.price * q.quantity
+            print(q.quantity)
         print(total)
         #log = 'Logout'
         # print(num)
         # print(per.id)
         if request.method == 'POST':
+            print("Inside second if")
             bid = request.POST['bid']
             print(bid)
             p = Book.objects.get(id=bid)
             if MyCart.objects.filter(book__id=bid, person__id=per.id, status=False).exists():
+                print("lululu")
                 messages.warning(request, 'Item already in the cart')
                 return render(request, 'books/single_product.html', {'p': p, 'per': per})
             else:
+                print("inside else condition")
                 bk = get_object_or_404(Book, id=bid)
                 # per = get_object_or_404(Person,id=per.id)
                 # print(per)
                 c = MyCart.objects.create(person=per, book=bk)
+                try:
+                    a=request.POST['qty']
+                    print(a)
+                    c.quantity = a
+                except:
+                    c.quantity = 1
                 c.save()
                 request.session['order_id']=c.id
                 messages.warning(request, 'Item has beed added to cart')
                 return render(request, 'books/single_product.html', {'p': p, 'per': per})
         else:
+            print("main else")
             return render(request, 'books/checkout.html', {'item': item, 'num': num, 'per': per, 'total': total})
     else:
+        print("main else part 2")
         messages.info(request, 'please login first to access the cart ')
         return redirect('basic_app:login')
 
@@ -299,8 +314,8 @@ def myaccount(request):
     if request.session.has_key('email'):
         data = Person.objects.get(email=request.session['email'])
         my_order = Orders.objects.filter(person__id=data.id)
+        
         return render(request, 'books/dashbord.html', {'data': data,'my_order':my_order})
-
     else:
         return redirect('basic_app:login')
 

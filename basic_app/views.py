@@ -4,10 +4,6 @@ from django.http import HttpResponse
 from books.models import Category,Book,Author
 from django.contrib import messages
 import qrcode
-
-import random
-import smtplib
-from email.message import EmailMessage
 # Create your views here.
 
 
@@ -70,118 +66,6 @@ def login(request):
     else:
         return render(request, 'basic_app/login.html')
 
-
-def forgot(request):
-    if request.POST:
-        data = request.POST['email']
-        print(data)
-        
-        valid = Person.objects.get(email=data)
-        print(valid)
-
-        otp = ''
-        rand = random.choice('0123456789')
-        rand1 = random.choice('0123456789')
-        rand2 = random.choice('0123456789')
-        rand3 = random.choice('0123456789')
-        otp = rand + rand1 + rand2 + rand3
-        print(f"Your OTP is {otp}")
-        
-
-        request.session['otp'] = otp
-        return redirect('basic_app:OTPCHECK')
-        # try:
-        #     valid = Person.objects.get(email=data)
-        #     print(valid)
-
-        #     otp = ''
-        #     rand = random.choice('0123456789')
-        #     rand1 = random.choice('0123456789')
-        #     rand2 = random.choice('0123456789')
-        #     rand3 = random.choice('0123456789')
-        #     otp = rand + rand1 + rand2 + rand3
-        #     print(f"Your OTP is {otp}")
-            
-        #     msg = EmailMessage()
-        #     msg.set_content(f'''     
-        #     Thank you for contacting with us.
-        #     Your OTP is {otp}
-        #     ''')
-            
-        #     msg['Subject'] = 'Online Book Store'
-        #     msg['From'] = 'akp3067@gmail.com'
-        #     msg['To'] = 'ankitpakhale786@gmail.com'
-        #     msg['To'] = '{valid}'
-            
-        #     # to get OTP in Email
-        #     server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
-        #     print("working1")
-        #     server.login("akp3067@gmail.com", "password")
-        #     print("working2")
-        #     server.send_message(msg)
-        #     print("working3")
-        #     server.quit()
-
-        #     request.session['otp'] = otp
-
-        #     return redirect('OTPCHECK')
-
-        # except:
-        #     return HttpResponse('<a href=""> You Have Entered Wrong Email Id... </a>')
-        
-        
-    return render(request,'basic_app/forgot.html')
-
-def otpCheck(request):
-    if 'otp' in request.session.keys():
-        if request.POST:
-            otp1 = request.POST['otpuser']
-            print("OTP1 is "+otp1)
-            otp = request.session['otp']
-            print("OTP is "+otp)
-            if otp1 == otp:
-                # del request.session['otp']
-                print("You Are Ready to Create New Password...")
-
-                user = Person.objects.get(email = otp1)
-                request.session['email'] = user.email
-                
-                return redirect('basic_app:NEWPASS')
-            else:
-                del request.session['otp']
-                return redirect('basic_app:FORGOT')
-        return render(request,'basic_app/otpCheck.html')
-    else:
-        return redirect('basic_app:login')
-
-def newPassword(request):
-    print("Inside New Pass FUNCTION")
-    # if 'otp' in request.session.keys():
-    if 'email' in request.session:
-        print("Inside New Pass if CONDITION")
-        if request.POST:
-            pass1 = request.POST['pass1']
-            pass2 = request.POST['pass2']
-
-            print(pass1+" : "+pass2)
-            if pass1 == pass2:
-                print("Both password is correct")
-
-                # obj = signUp.objects.get(email =  request.POST.get('email'))
-
-                obj = Person.objects.get(email = request.session['email'])
-
-                obj.password = pass1
-                obj.confirmPassword = pass2
-                obj.save()
-                del request.session['otp']
-                # return redirect('HOME')
-                return redirect('basic_app:login')
-            else:
-                return HttpResponse("<h1>Password must be same</h1>")
-        return render(request,'basic_app/newPass.html')
-    return redirect('basic_app:login')
-
 def authorwise(request,name):
     if request.session.has_key('email'):
         auth=Author.objects.get(name=name)
@@ -192,6 +76,7 @@ def authorwise(request,name):
         book=Book.objects.all().filter(authors=auth).distinct()
         return render(request,'basic_app/authwise.html',{'cat':auth,'book':book})
 
+
 def catwisebook(request,cat_name):
     if request.session.has_key('email'):
         cat=Category.objects.get(cat_name=cat_name)
@@ -201,6 +86,7 @@ def catwisebook(request,cat_name):
         cat=Category.objects.get(cat_name=cat_name)
         book=Book.objects.all().filter(categories=cat).distinct()
         return render(request,'basic_app/catwise.html',{'cat':cat,'book':book})
+
 
 def logout(request):
     if request.session.has_key('email'):
@@ -214,10 +100,27 @@ def profile_edit(request):
         data = Person.objects.get(email=request.session['email'])
         if request.method == 'POST':
 
-            data.first_name = request.POST.get('firstname') or None
-            data.last_name = request.POST.get('lastname') or None
-            data.email = request.POST.get('email') or None
-            data.password = request.POST.get('passoword') or None
+            if request.POST.get('firstname') == '':
+                pass
+            else:
+                data.first_name = request.POST.get('firstname')
+                
+            if request.POST.get('lastname') == '':
+                pass
+            else:
+                data.last_name = request.POST.get('lastname')
+                
+            if request.POST.get('email') == '':
+                pass
+            else:
+                data.email = request.POST.get('email')
+            
+            if request.POST.get('password') == '':
+                pass
+            else:
+                data.password = request.POST.get('password')
+            
             data.save()
+            
             print("Details successfully updated")
             return redirect('basic_app:logout')

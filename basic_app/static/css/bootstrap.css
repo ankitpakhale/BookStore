@@ -1775,9 +1775,6 @@ pre code {
   }
   .col-sm-12 {
     width: 100%;
-    top: 120px;
-    justify-content: center;
-    align-items: center;
   }
   .col-sm-11 {
     width: 91.66666667%;
@@ -6585,4 +6582,3 @@ button.close {
   }
 }
 /*# sourceMappingURL=bootstrap.css.map */
-
