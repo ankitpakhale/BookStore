@@ -72,24 +72,15 @@ def shoplist(request):
         print(per)
         print(per.first_name)
         log = 'Logout'
+
         return render(request, 'books/shop.html', {'b': b, 'per': per,'c':c,'a':a})
+
     return render(request, 'books/shop.html', {'b': b,'c':c,'a':a})
 
 def book_view(request, pk):
-
+    
     p = get_object_or_404(Book, pk=pk)
     if request.session.has_key('email'):
-        
-        # obj=Book.objects.get(id=pk)
-        # qty=1
-        # if 'psub' in request.POST:
-        #     if '+' in request.POST.get('psub'):
-        #         qty=int(request.POST['qty'])+1
-        #     else:
-        #         qty=int(request.POST['qty'])
-        #         if qty>1:
-        #             qty=qty-1
-                    
         p = get_object_or_404(Book, pk=pk)
         user1 = request.session['email']
         # print(user1)
@@ -97,7 +88,7 @@ def book_view(request, pk):
        # print(per)
         # print(per.first_name)
         log = 'Logout'
-        return render(request, 'books/single_product.html', {'p': p, 'per': per, 'object':obj,'qty':qty})
+        return render(request, 'books/single_product.html', {'p': p, 'per': per})
 
     return render(request, 'books/single_product.html', {'p': p})
 

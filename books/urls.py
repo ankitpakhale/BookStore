@@ -4,12 +4,9 @@ from .views import shoplist, book_view, add_to_cart, remove_cart, search, my_fil
 urlpatterns = [
     path('about/',about,name='about'),
     path('contact/',contact,name='contact'),
-    path('bookview/<int:pk>/', book_view, name='book_view'),
-    
     path('shop/', shoplist, name='shop'),
-    
+    path('bookview/<int:pk>/', book_view, name='book_view'),
     path('cart/', add_to_cart, name='cart'),
-    
     path('deleteitem/<int:id>/', remove_cart, name='delete'),
     path('search/', search, name='search'),
     path('filter/', my_filter, name='my_filter'),
@@ -20,3 +17,5 @@ urlpatterns = [
     path('speak/<int:pk>',speak,name='speak'),
     path('invoice/<int:pk>',invoice,name='invoice'),
 ]
+
+# old
