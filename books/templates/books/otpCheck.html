@@ -1,0 +1,50 @@
+{% extends 'basic_app/base.html' %}
+{% block content %}
+
+<!--SLIDER START-->
+<div class="pages-hero">
+    <div class="container">
+        <div class="pages-title">
+            <h1>OTP Check</h1>
+        </div>
+    </div>
+</div>
+<!--SLIDER END-->
+</header>
+
+<!-- FORGET FORM START -->
+<div class="container mt-5 mb-5">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <br/>
+            <form method="POST">
+                {% csrf_token %}
+                <div class="messages"></div>
+                <div class="controls">
+                    <div class="row">
+
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <input type="text" name="otpuser" class="form-control custom-form" placeholder="Enter Your OTP">
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="row ">
+                        <div class="col-sm-12 ">
+                            <div class="form-group ">
+                                <input class="btn btn-washla" type="submit" value="Check">
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- FORGET FORM END -->
+
+{% endblock %}

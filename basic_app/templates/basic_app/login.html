@@ -41,12 +41,14 @@
                 </h4>
                 <div id="loginbox" style="margin-top:30px;" class="mainbox  loginbox">
                     <div class="panel panel-info">
+
                         <div class="panel-heading">
                             <div class="panel-title">Sign In</div>
                             <div class="fpassword">
-                                <a href="#">Forgot password?</a>
+                                <a href="{% url 'basic_app:conf' %}">Forgot password?</a>
                             </div>
                         </div>
+
                         <div style="padding-top:30px" class="panel-body">
                             <div style="display:none" id="login-alert" class="alert alert-danger col-sm-12"></div>
                             {% if messages %}

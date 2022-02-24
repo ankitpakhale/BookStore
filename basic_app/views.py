@@ -4,6 +4,11 @@ from django.http import HttpResponse
 from books.models import Category,Book,Author
 from django.contrib import messages
 import qrcode
+
+import random
+import smtplib
+from email.message import EmailMessage
+
 # Create your views here.
 
 
@@ -27,6 +32,7 @@ def register(request):
         email = request.POST.get('email')
         password1 = request.POST.get('password1')
         password2 = request.POST.get('password2')
+        forgot_ans = request.POST.get('forgot_ans')
 
         if password1 == password2:
             if Person.objects.filter(email=email).exists():
@@ -36,25 +42,20 @@ def register(request):
                 return redirect('basic_app:register')
 
             else:
-                data = Person.objects.create(
-                    first_name=first_name, last_name=last_name, email=email, password=password1)
+                data = Person.objects.create(first_name=first_name, last_name=last_name, email=email, password=password1, forgot_ans = forgot_ans)
                 data.save()
                 print('done')
-                return redirect('basic_app:index')
                 messages.success(request, 'Your account successfully created')
-               
+                return redirect('basic_app:index')
         else:
             messages.info(request, 'Password does not match')
             return redirect('basic_app:register')
-
     return render(request, 'basic_app/register.html')
-
 
 def login(request):
     if request.method == 'POST':
         email = request.POST.get('email')
         password = request.POST.get('password')
-
         m = Person.objects.get(email=email)
         if m.password == password:
             request.session['email'] = email
@@ -65,6 +66,43 @@ def login(request):
             return redirect('basic_app:login')
     else:
         return render(request, 'basic_app/login.html')
+
+def Confirm(request):
+    if request.POST:
+        data = request.POST['conf']
+        try:
+            valid = Person.objects.get(forgot_ans=data)
+            if valid:
+                print("Valid ans")
+                request.session['user'] = valid.email
+                print("redirecting to forgot")
+                return redirect('basic_app:FORGOT')
+            else:
+                print("INValid ans")
+                return HttpResponse('Wrong Answer')    
+        except:
+            return HttpResponse('Wrong Answer')
+    return render(request,'basic_app/Confirm.html')
+
+def forgot(request):
+    print("inside  1")
+    if 'user' in request.session:
+        print("inside 2")
+        if request.POST:
+            print("inside 3")
+            pass1 = request.POST['pass1']
+            pass2 = request.POST['pass2']
+            
+            if pass1 == pass2:
+                obj = Person.objects.get(email=request.session['user'])
+                obj.password = pass2
+                obj.save()
+                del request.session['user']
+                return redirect('basic_app:login')
+            else:
+                messages.add_message(request, messages.ERROR, 'Not Same')
+        return render(request,'basic_app/forgot.html')
+    return redirect('basic_app:login')
 
 def authorwise(request,name):
     if request.session.has_key('email'):
