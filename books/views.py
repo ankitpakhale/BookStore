@@ -119,6 +119,7 @@ def add_to_cart(request):
         #log = 'Logout'
         # print(num)
         # print(per.id)
+        
         if request.method == 'POST':
             print("Inside second if")
             bid = request.POST['bid']
@@ -142,7 +143,7 @@ def add_to_cart(request):
                     c.quantity = 1
                 c.save()
                 request.session['order_id']=c.id
-                messages.warning(request, 'Item has beed added to cart')
+                messages.warning(request, 'Item has been added to cart')
                 return render(request, 'books/single_product.html', {'p': p, 'per': per})
         else:
             print("main else")
@@ -151,7 +152,6 @@ def add_to_cart(request):
         print("main else part 2")
         messages.info(request, 'please login first to access the cart ')
         return redirect('basic_app:login')
-
 
 def remove_cart(request, id):
     if request.session.has_key('email'):
@@ -233,7 +233,6 @@ def place_order(request):
             city = request.POST['city']
 
             # Malking Qrcode
-
             qrdata = f"""
             name = {full_name}
             email = {email}
@@ -252,6 +251,7 @@ def place_order(request):
             y = f'{num}.jpeg'
             my_order = Orders.objects.create(person=per,items=books_incart,order_amount=total,qrimage=y)
             my_order.save()
+            print("QR Saved")
             #print(my_order.order_id)
 
             # ----------- remove item from cart after placed the order ---------- #
@@ -259,7 +259,8 @@ def place_order(request):
                 cart_obj = MyCart.objects.get(id=i.id)
                 cart_obj.status = True
                 cart_obj.save()
-            # Sending Email to customer
+
+            # ----------- Sending Email to customer -----------
             msg = EmailMessage()
             msg.set_content(f'''
             Thank you for your order.
@@ -273,38 +274,20 @@ def place_order(request):
             Items name: {books_incart}
             ''')
 
-            # msg['Subject'] = 'Cronicle Bookstore'
-            # msg['From'] = "hkp6565@gmail.com"
-            # msg['To'] = f"{email}"
+            msg['Subject'] = 'Cronicle Bookstore'
+            msg['From'] = "hkp6565@gmail.com"
+            msg['To'] = f"{email}"
 
-            # # Send the message via our own SMTP server.
-            # server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
-            # server.login("hkp6565@gmail.com", "shivam@789")
-            # server.send_message(msg)
-            # server.quit()
-
-
-            # Sending Mail    
-            # sender_email = 'hkp6565@gmail.com'
-            # password = 'shivam@789'
-            # message = f"""\
-            # Subject: Book Order
-            # To: {email}
-            # From: {sender_email}
-
-            # Thank you for your order, order details is  \n NAME:{full_name}\n EMAIL:{email}\n CITY:{city} \n Order Amount:{total}\n Items name:{books_incart}."""
-            # print(message)
-            # #address_type = request.POST['atype']
-            # server = smtplib.SMTP('smtp.gmail.com', 587)
-            # server.starttls()
-            # server.login(sender_email, password)
-            # print('login success')
-            # server.sendmail(sender_email, email, message)
-            # print('email sent')
-            # server.quit()
-
-            
-            return redirect('books:myaccount')
+            # Send the message via our own SMTP server.
+            server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
+            print("1st")
+            server.login("hkp6565@gmail.com", "shivam@789")
+            print("2nd")
+            server.send_message(msg)
+            print("3rd")
+            server.quit()
+            print("Successfully mail sent")
+            return redirect('books:shop')
 
     else:
         messages.info(request, 'please login first to access the cart ')
