@@ -152,12 +152,7 @@ def profile_edit(request):
                 pass
             else:
                 data.email = request.POST.get('email')
-            
-            if request.POST.get('password') == '':
-                pass
-            else:
-                data.password = request.POST.get('password')
-            
+          
             data.save()
             
             print("Details successfully updated")
