@@ -46,9 +46,9 @@ class MyCart(models.Model):
     quantity=models.PositiveIntegerField(default=1)
     added_on = models.DateTimeField(auto_now_add=True,null=True)
     update_on= models.DateTimeField(auto_now_add=True,null=True)
-
     def __str__(self):
         return self.person.first_name
+    
 class Orders(models.Model):
     order_id = models.AutoField(primary_key=True)
     person = models.ForeignKey(Person,on_delete=models.CASCADE)
