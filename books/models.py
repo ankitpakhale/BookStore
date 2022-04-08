@@ -46,16 +46,15 @@ class MyCart(models.Model):
     quantity=models.PositiveIntegerField(default=1)
     added_on = models.DateTimeField(auto_now_add=True,null=True)
     update_on= models.DateTimeField(auto_now_add=True,null=True)
+
     def __str__(self):
         return self.person.first_name
-    
 class Orders(models.Model):
     order_id = models.AutoField(primary_key=True)
     person = models.ForeignKey(Person,on_delete=models.CASCADE)
     items = models.CharField(max_length=100)
     order_amount = models.CharField(max_length=80)
     ordered_on = models.DateTimeField(auto_now_add=True,null=True)
-    qrimage = models.ImageField(upload_to='qrimage',blank=True,null=True)
     invoice = models.FileField(default='')
 
     def __str__(self):

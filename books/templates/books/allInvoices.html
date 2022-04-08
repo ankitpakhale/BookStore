@@ -1,0 +1,54 @@
+{% extends 'basic_app/base.html' %}
+{% block content %}
+{% load static %}
+
+<head>
+    <link rel="stylesheet" href="{%static 'books/myacc.css' %}">
+</head>
+<div class="jumbotron">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <!-- My Account Page Start -->
+                <div class="myaccount-page-wrapper">
+                    <!-- My Account Tab Menu Start -->
+                    <div class="row">
+
+
+                        <h3 style="margin: 3.5rem 0 1.5rem 0;">Orders</h3>
+                        <div class="myaccount-table table-responsive text-center">
+                            <table class="table table-bordered">
+                                <thead class="thead-light">
+                                    <tr>
+                                        <th>Order</th>
+                                        <th>Ordered Date</th>
+                                        <th>Item Name</th>
+                                        <th>Total</th>
+                                        <th>Order Id</th>
+                                        <th>Invoice</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for order in my_order %}
+                                    <tr>
+                                        <td>{{forloop.counter}}</td>
+                                        <td>{{order.ordered_on}}</td>
+                                        <td>{{order.items}}</td>
+                                        <td>Rs.{{order.order_amount}}</td>
+                                        <td>{{order.order_id}}</td>
+                                        <td><a href="{%url 'books:perticularInvoices' order.order_id %}"
+                                                class="check-btn sqr-btn ">Invoice</a></td>
+                                    </tr>
+                                    {% endfor %}
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -6,28 +6,23 @@ from django.db.models import Q
 from .forms import FilterSearchForm
 import smtplib
 from email.message import EmailMessage
-import qrcode
 from bookstore.settings import BASE_DIR
 import os
 import random
 import time
-import playsound
-import speech_recognition as sr
-from gtts import gTTS
 from reportlab.pdfgen import canvas
 from io import BytesIO
 from datetime import date,datetime
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
+
+from django.template.loader import get_template
+from xhtml2pdf import pisa
+
 # Create your views here.
-
-
-
 
 def about(request):
     return render(request,'books/about.html')
-
-
 
 def contact(request):
     if request.method == "POST":
@@ -47,13 +42,13 @@ def contact(request):
         Msg: {mymsg}
         ''')
 
-        msg['Subject'] = 'Cronicle Bookstore'
-        msg['From'] = "hkp6565@gmail.com"
-        msg['To'] = "hardikvekariya911@gmail.com"
+        msg['Subject'] = 'E- Bookstore'
+        msg['From'] = "mailtesting681@gmail.com"
+        msg['To'] = email
 
         # Send the message via our own SMTP server.
         server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
-        server.login("hkp6565@gmail.com", "shivam@789")
+        server.login("mailtesting681@gmail.com", "mailtest123@'")
         server.send_message(msg)
         server.quit()
         messages.info(request,'Message had been sent. Thank you for your notes.')
@@ -79,7 +74,6 @@ def shoplist(request):
 
 
 def book_view(request, pk):
-
     p = get_object_or_404(Book, pk=pk)
     if request.session.has_key('email'):
         p = get_object_or_404(Book, pk=pk)
@@ -98,11 +92,6 @@ def book_preview(request, pk):
     response = HttpResponse(c.preview.read(),content_type='application/pdf')
     return response
 
-# def book_read(request,pk):
-#     x = get_object_or_404(Book,pk)
-#     response = HttpResponse(x.fullbook.read(),content_type='application/pdf')
-#     return response
-
 def add_to_cart(request):
     print("inside add_to_cart")
     if request.session.has_key('email'):
@@ -116,6 +105,9 @@ def add_to_cart(request):
             total += q.book.price * q.quantity
             print(q.quantity)
         print(total)
+        
+        # request.session['tot'] = total
+        
         #log = 'Logout'
         # print(num)
         # print(per.id)
@@ -168,16 +160,6 @@ def search(request):
 
         b = Book.objects.filter(Q(title__icontains=q) | Q(
             authors__name__icontains=q) | Q(categories__cat_name__icontains=q)).distinct()
-    # except:
-    #     b = Book.objects.filter(categories__cat_name__icontains=query)
-    # print(query)
-    # b = Book.objects.filter(authors__name__icontains=query)
-    # print(b)
-
-    # if Book.objects.filter(title__icontains=query) is not None:
-    #     b = Book.objects.filter(title__icontains=query)
-    #     return render(request,'books/shop.html',{'b':b})
-    # else:
 
     return render(request, 'books/shop.html', {'b': b})
 
@@ -209,22 +191,40 @@ def my_filter(request):
         b = Book.objects.filter(price__range = (0,500)).order_by('price')
     elif price_range == '500-1000':
         b = Book.objects.filter(price__range = (500,1000)).order_by('price')
-
     return render(request, 'books/shop.html', {'b': b})
 
+# ---------------------------------------------------------------------------------------
+
+def render_to_pdf(template_src, context_dict={}):
+    template = get_template(template_src)
+    html  = template.render(context_dict)
+    result = BytesIO()
+    pdf = pisa.pisaDocument(BytesIO(html.encode("ISO-8859-1")), result)
+    if not pdf.err:
+        return HttpResponse(result.getvalue(), content_type='application/pdf')
+    return None
+# ---------------------------------------------------------------------------------------
 
 def place_order(request):
     if request.session.has_key('email'):
         per = Person.objects.get(email=request.session['email'])
         item = MyCart.objects.filter(person__id=per.id, status=False)
-        total = 0
+        
+        itemQty = MyCart.objects.filter(person=per)
+        print(itemQty[0].quantity,"This is a new qty")
+        
+        # total = request.session['tot']
+        # print(total,"sjiascibak") 
+        # del request.session['tot']
+        
+        total1 = 0
         books_incart = ''
         for q in item:
-            total += q.book.price
+            total1 += q.book.price
             books_incart = q.book.title +','+ books_incart
-            #print(total)
+            #print(total1)
             #print(books_incart)
-        request.session['Total']=total
+        # print(per,books_incart,total1,"---------------00000000000000")
 
         if request.method == 'POST':
             full_name = request.POST['name']
@@ -232,26 +232,12 @@ def place_order(request):
             landmark = request.POST['landmark']
             city = request.POST['city']
 
-            # Malking Qrcode
-            qrdata = f"""
-            name = {full_name}
-            email = {email}
-            city = {city}
-            landmark = {landmark}
-            items name = {books_incart}
-            amount = {total}
-            """ 
             num = random.randint(1111,9999)
             obj = Orders(person=per)
-            qr=qrcode.QRCode(version=1,box_size=10,border=5)
-            qr.add_data(qrdata)
-            qr.make(fit=True)
-            img=qr.make_image(fill="black",back_color="white")
-            img.save(os.path.join(BASE_DIR,"media/"+ str(num) +".jpeg"))
-            y = f'{num}.jpeg'
-            my_order = Orders.objects.create(person=per,items=books_incart,order_amount=total,qrimage=y)
+            my_order = Orders.objects.create(person=per,items=books_incart,order_amount=total1)
             my_order.save()
-            print("QR Saved")
+            
+
             #print(my_order.order_id)
 
             # ----------- remove item from cart after placed the order ---------- #
@@ -269,29 +255,48 @@ def place_order(request):
             Full name: {full_name}
             Email: {email}
             city: {city}
-            Order Amount: {total}
-            Order Id: {my_order.order_id}
+            Order Amount: {total1}
             Items name: {books_incart}
+            
+            Your Order will be delivered within next 5 days
             ''')
 
-            msg['Subject'] = 'Cronicle Bookstore'
-            msg['From'] = "hkp6565@gmail.com"
+            msg['Subject'] = 'E-Bookstore'
+            msg['From'] = "mailtesting681@gmail.com"
             msg['To'] = f"{email}"
 
             # Send the message via our own SMTP server.
+            print("0")
             server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
-            print("1st")
-            server.login("hkp6565@gmail.com", "shivam@789")
-            print("2nd")
+            print("1")
+            server.login("mailtesting681@gmail.com", "mailtest123@")
+            print("2")
             server.send_message(msg)
-            print("3rd")
+            print("3")
             server.quit()
-            print("Successfully mail sent")
-            return redirect('books:shop')
+            print("4")
 
+            # print(f"Full name: {full_name}, Email: {email}, city: {city}, Order Amount: {total1}, Items name: {books_incart}")
+            
+            # print(f"{full_name}, {email}, {city}, {total1}, {books_incart},55555555555555555555")
+            print("Successfully mail sent")
+            
+            print("redirecting to html to pdf")
+          
+            data = {'FullName':full_name,
+                    'Email':email,
+                    'city':city,
+                    'OrderAmount':total1, 
+                    'books_incart':books_incart, 
+                    'per':per}
+            pdf = render_to_pdf('books/GeneratePdf.html', data)
+            return HttpResponse(pdf, content_type='application/pdf')
+            
+            # return redirect('books:shop')
     else:
         messages.info(request, 'please login first to access the cart ')
         return redirect('basic_app:login')
+    return render(request,'books/checkout.html')
 
 def myaccount(request):
     if request.session.has_key('email'):
@@ -301,29 +306,41 @@ def myaccount(request):
         return render(request, 'books/dashbord.html', {'data': data,'my_order':my_order})
     else:
         return redirect('basic_app:login')
-
-def qrshow(request,order_id):
-    q = get_object_or_404(Orders,order_id=order_id)
-    return render(request,'books/qr.html',{'q':q})
-
-def speak(request,pk):
-    p = get_object_or_404(Book,pk=pk)
-    tts = gTTS(text=p.description,lang="en")
     
-    filename = os.path.join(BASE_DIR,"media/"+ str(p.id) +".mp3")
-    try:    
-        tts.save(filename)
-        #p.audio = filename
-        #p.save()
-        playsound.playsound(filename)
-    except:
-        playsound.playsound(filename)
+def allInvoices(request):
     if request.session.has_key('email'):
-        per = Person.objects.get(email=request.session['email'])
-        return render(request,'books/single_product.html',{'p':p,'per':per})
+        data = Person.objects.get(email=request.session['email'])
+        my_order = Orders.objects.filter(person__id=data.id)
+        return render(request, 'books/allInvoices.html', {'data': data,'my_order':my_order})
     else:
-        return render(request,'books/single_product.html',{'p':p})
+        return redirect('basic_app:login')
+    
+def perticularInvoices(request,pk):
+    if request.session.has_key('email'):
+        
+        data = Person.objects.get(email=request.session['email'])
+        my_order = Orders.objects.filter(person__id=data.id)
+        
+        # x = get_object_or_404(Orders,pk=pk)
+        # f= open(f'media/invoice/{x.order_id}.txt','w')
+        # f.write('orderId:'+str(x.order_id))
+        # f.close()
+        # print('file done')
+        # # f = f"invoice/{x.order_id}.txt"
+        # # x.invoice = f
+        # x.save()
 
+        data = {
+            # 'x':x
+            'data': data,
+            'my_order':my_order
+        }
+        
+        pdf = render_to_pdf('books/GeneratePdf1.html', data)
+        return HttpResponse(pdf, content_type='application/pdf')
+        
+    else:
+        return redirect('basic_app:login')
 
 def invoice(request,pk):
     x = get_object_or_404(Orders,pk=pk)
@@ -335,9 +352,3 @@ def invoice(request,pk):
     x.invoice = f
     x.save()
     return render(request,'books/invoice.html',{'x':x})
-
-
-    # response = HttpResponse(content_type='application/pdf')
-    # response['Content-Disposition'] = 'attachment; filename="somefilename.pdf"'
-    # c = canvas.Canvas(response,pagesize=(200,250),bottomup=0)
-

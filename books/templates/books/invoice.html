@@ -15,10 +15,7 @@
             </tr>
           </thead>
           <tbody>
-          <tr>
-                <td><b>QR Scane</b></td>
-              <td><img src="{{x.qrimage.url}}" alt="man" height="100" width="100" /></td>
-          </tr>
+
           <tr>
                 <td><b>Date</b></td>
               <td>{{ x.ordered_on}}</td>
@@ -71,7 +68,6 @@
           </tbody>
         </table>
 <center>
-    <a href="{{x.invoice.url}}" download><button class="btn"><i class="fa fa-download"></i> Download</button><br><br></a>
     <a href="{% url 'basic_app:index' %}"> <button type="button" class="btn btn-primary">BACK TO HOME</button></a><br>
     <!-- Auto width -->
 </center>
