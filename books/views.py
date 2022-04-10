@@ -21,6 +21,7 @@ from xhtml2pdf import pisa
 
 # Create your views here.
 
+
 def about(request):
     return render(request,'books/about.html')
 
